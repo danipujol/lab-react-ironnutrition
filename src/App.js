@@ -1,23 +1,70 @@
-import logo from './logo.svg';
+
+import { useState } from 'react';
 import './App.css';
 
+import foods from "./foods.json";
+
+import FoodBox from './components/FoodBox';
+import AddFoodForm from './components/AddFoodForm';
+import Search from './components/Search'
+
+
 function App() {
+
+const [foodsArr, setFoodsArr] = useState(foods)
+
+const addFood = (newFood) => {
+  const clone = JSON.parse(JSON.stringify(foods))
+  clone.push(newFood)
+  setFoodsArr(clone)
+  setFilteredFood(clone)
+ }
+
+const [filteredFoods, setFilteredFood] = useState([])
+
+ const searchFood = (search) => {
+
+
+  let filteredArr = foods.filter((eachFood) => {
+    if(eachFood.name.includes(search)){
+     return true //agrega el elemento
+      }else {
+        return false //no agregues el elemento
+      }
+    })
+    
+    setFilteredFood(filteredArr)
+
+ }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    
+    <AddFoodForm addFood={addFood}/>
+
+
+    {foodsArr.map((eachFood) => (
+
+   <div key={eachFood.Id}>
+
+   <Search searchFood={searchFood}/>
+
+   <FoodBox food={eachFood}/>
+
+     {/* <p> {eachFood.name} </p>
+
+      <img src={eachFood.image} width={150} /> */}
+
+   </div>
+
+
+
+      ))}
+
+ 
+
+
+
     </div>
   );
 }
